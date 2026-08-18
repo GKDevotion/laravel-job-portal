@@ -34,11 +34,17 @@ class ApplicationController extends Controller
             return back()->with('error', 'You have already applied to this job.');
         }
 
-        // Resume: either the freshly uploaded file, or the seeker's saved profile resume
+        // Resume: either the freshly uploaded file, or a copy of the seeker's saved profile
+        // resume (stored via media library, so this works identically on local or S3/Spaces).
         if ($request->hasFile('resume')) {
-            $resumePath = $request->file('resume')->store('resumes/'.$user->id, 'public');
-        } elseif ($request->boolean('use_profile_resume') && $user->resume) {
-            $resumePath = $user->resume;
+            $resumePath = $request->file('resume')->store('resumes/'.$user->id, config('filesystems.default'));
+        } elseif ($request->boolean('use_profile_resume') && $user->getFirstMedia('resume')) {
+            $profileResume = $user->getFirstMedia('resume');
+            $extension = pathinfo($profileResume->file_name, PATHINFO_EXTENSION);
+            $resumePath = "resumes/{$user->id}/".uniqid('profile_').".{$extension}";
+
+            \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))
+                ->put($resumePath, $profileResume->stream());
         } else {
             return back()->withErrors(['resume' => 'A resume is required to apply.'])->withInput();
         }

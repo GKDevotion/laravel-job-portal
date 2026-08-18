@@ -252,4 +252,69 @@ The media system — local storage today (avatars, resumes, logos already use `S
 via `spatie/laravel-medialibrary`), extended to support Amazon S3 and DigitalOcean Spaces as
 drop-in alternatives via the `AWS_*` / `AWS_ENDPOINT` env vars already stubbed in `.env.example`.
 
+---
+
+# Phase 4: Media System (Local, S3, DigitalOcean Spaces)
+
+## What's new
+
+- **One env var switches storage backends.** `FILESYSTEM_DISK=public` (default, local disk,
+  served via `/storage`) or `FILESYSTEM_DISK=s3` — and `media-library.php`'s `disk_name` follows
+  whichever one is set, so logos/avatars/covers move to S3 automatically with zero code changes.
+- **DigitalOcean Spaces is the same `s3` disk**, just with `AWS_ENDPOINT` set to your Spaces
+  region (e.g. `https://nyc3.digitaloceanspaces.com`) and `AWS_USE_PATH_STYLE_ENDPOINT=false`.
+  Spaces is S3-API-compatible, so this needed no separate driver — see `config/filesystems.php`.
+- **Company** now has real media collections: `logo` and `cover_image`, both `singleFile()` so
+  uploading a replacement automatically deletes the old one wherever it lives (local or cloud) —
+  no orphaned files. Conversions: `thumb` (200×200 crop) for the logo, `cover` (1200×400 crop)
+  for the banner, generated synchronously on upload.
+- **User (job seeker)** now has an `avatar` collection (150×150 thumb conversion) and a `resume`
+  collection replacing the old plain `resume` string column from Phase 1 — the seeker's default
+  resume is now managed the same way as every other file in the app. `avatarUrl()` falls back to
+  a generated initials avatar so templates never need a null check.
+- **The apply flow was updated**: reusing your profile resume now streams a copy of the media-
+  library file into the application's own resume slot (works identically on local or S3 — see
+  `Seeker\ApplicationController::store`), rather than assuming a local file path.
+- New controllers: `Seeker\ProfileController` (avatar, resume, bio/contact fields) and
+  `Company\ProfileController` (logo, cover image, company details) — both with matching views
+  and sidebar/nav links.
+- `database/migrations/2025_01_04_000001_create_media_table.php` — media library's own table,
+  included directly since this sandbox can't run `vendor:publish`.
+
+## New/changed files
+- `config/filesystems.php` — `public` and `s3` disks (Spaces = `s3` + `AWS_ENDPOINT`)
+- `config/media-library.php` — disk selection, conversion settings
+- `database/migrations/..._create_media_table.php`
+- `app/Models/Company.php`, `app/Models/User.php` — media collections/conversions
+- `app/Http/Controllers/Seeker/ProfileController.php`, `Company/ProfileController.php`
+- `resources/views/seeker/profile/edit.blade.php`, `company/profile/edit.blade.php`
+- `resources/views/company/applications/show.blade.php`, `employee/applications/show.blade.php`
+  — resume download links now read from the explicitly configured disk
+
+## Switching from local storage to S3/Spaces later
+
+If you launch on local storage and want to migrate to S3/Spaces afterward, existing files are
+**not** moved automatically — only new uploads go to the new disk once you flip `FILESYSTEM_DISK`.
+To migrate existing media:
+```bash
+php artisan tinker
+>>> Spatie\MediaLibrary\MediaCollections\Models\Media::all()->each(fn ($m) => $m->move($m->model, $m->collection_name, 's3'));
+```
+Run that once after setting your `AWS_*` credentials, before switching `FILESYSTEM_DISK` to `s3`
+in production.
+
+## Try it locally
+1. `php artisan storage:link` (creates the `public/storage` symlink for local disk serving)
+2. Log in as a job seeker → `/profile` → upload an avatar and a resume PDF
+3. Log in as an employer → `/employer/profile` → upload a logo and cover image
+4. Apply to a job using "use resume from my profile" — check the applicant's resume link in the
+   employer's applicant review screen; it should download the copied file correctly
+
+## Next: Phase 5
+
+Invoicing — no live payment gateway yet, just generating real invoice records and downloadable
+PDF invoices (via `barryvdh/laravel-dompdf`, already in `composer.json`) tied to whatever
+billable events you want to track (e.g. featured job listings, job posting credits).
+
+
 

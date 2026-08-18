@@ -51,6 +51,11 @@ Route::group(
             Route::get('applications', [ApplicationController::class, 'index'])->name('applications.index');
             Route::delete('applications/{application}', [ApplicationController::class, 'withdraw'])->name('applications.withdraw');
 
+            Route::get('profile', [\App\Http\Controllers\Seeker\ProfileController::class, 'edit'])->name('profile.edit');
+            Route::put('profile', [\App\Http\Controllers\Seeker\ProfileController::class, 'update'])->name('profile.update');
+            Route::post('profile/avatar', [\App\Http\Controllers\Seeker\ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+            Route::post('profile/resume', [\App\Http\Controllers\Seeker\ProfileController::class, 'updateResume'])->name('profile.resume');
+
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         });
 

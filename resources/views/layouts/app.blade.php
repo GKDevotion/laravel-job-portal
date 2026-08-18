@@ -17,6 +17,7 @@
 
                 @auth('web')
                     <a href="{{ route('dashboard') }}" class="hover:text-indigo-600">{{ __('Dashboard') }}</a>
+                    <a href="{{ route('profile.edit') }}" class="hover:text-indigo-600">{{ __('My Profile') }}</a>
                     <form method="POST" action="{{ route('logout') }}">@csrf
                         <button class="hover:text-indigo-600">{{ __('Logout') }}</button>
                     </form>

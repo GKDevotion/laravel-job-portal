@@ -27,6 +27,9 @@
                 <a href="{{ route($prefix.'.jobs.index') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Job Listings') }}</a>
                 <a href="{{ route($prefix.'.applications.index') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Applicants') }}</a>
                 @if ($guard === 'company')
+                    <a href="{{ route('company.profile.edit') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Company Profile') }}</a>
+                @endif
+                @if ($guard === 'company')
                     <a href="{{ route('company.employees.index') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Team') }}</a>
                     @if (\Illuminate\Support\Facades\Route::has('company.invoices.index'))
                         <a href="{{ route('company.invoices.index') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Invoices') }}</a>

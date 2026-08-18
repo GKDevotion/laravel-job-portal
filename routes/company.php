@@ -45,6 +45,11 @@ Route::prefix('employer')->name('company.')->group(function () {
         Route::patch('team/{employee}/toggle-status', [EmployeeController::class, 'toggleStatus'])->name('employees.toggle-status');
         Route::delete('team/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
+        Route::get('profile', [\App\Http\Controllers\Company\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('profile', [\App\Http\Controllers\Company\ProfileController::class, 'update'])->name('profile.update');
+        Route::post('profile/logo', [\App\Http\Controllers\Company\ProfileController::class, 'updateLogo'])->name('profile.logo');
+        Route::post('profile/cover', [\App\Http\Controllers\Company\ProfileController::class, 'updateCoverImage'])->name('profile.cover');
+
         // Route::get('invoices', [Company\InvoiceController::class, 'index'])->name('invoices.index'); // Phase 5
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');

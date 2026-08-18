@@ -13,7 +13,7 @@
             </div>
         @endif
         <div class="mt-4 pt-4 border-t">
-            <a href="{{ \Illuminate\Support\Facades\Storage::url($application->resume_path) }}" target="_blank" class="text-indigo-600 text-sm hover:underline">{{ __('Download Resume') }} &rarr;</a>
+            <a href="{{ \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->url($application->resume_path) }}" target="_blank" class="text-indigo-600 text-sm hover:underline">{{ __('Download Resume') }} &rarr;</a>
         </div>
     </div>
     <div class="bg-white border rounded-xl p-6">

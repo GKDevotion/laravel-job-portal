@@ -66,7 +66,7 @@
             @elseif (auth('web')->check())
                 <form method="POST" action="{{ route('jobs.apply', $jobListing) }}" enctype="multipart/form-data" class="mt-4 space-y-3">
                     @csrf
-                    @if (auth('web')->user()->resume)
+                    @if (auth('web')->user()->getFirstMedia('resume'))
                         <label class="flex items-center gap-2 text-sm">
                             <input type="checkbox" name="use_profile_resume" value="1" checked>
                             {{ __('Use resume from my profile') }}
