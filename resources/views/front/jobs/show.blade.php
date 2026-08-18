@@ -1,6 +1,46 @@
 @extends('layouts.app')
 
-@section('title', $jobListing->title)
+@section('title', $jobListing->title.' at '.$jobListing->company->company_name)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($jobListing->description), 160))
+
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'JobPosting',
+    'title' => $jobListing->title,
+    'description' => $jobListing->description,
+    'datePosted' => optional($jobListing->published_at)->toIso8601String(),
+    'validThrough' => optional($jobListing->application_deadline)->toIso8601String(),
+    'employmentType' => strtoupper(str_replace(' ', '_', $jobListing->type->name)),
+    'hiringOrganization' => [
+        '@type' => 'Organization',
+        'name' => $jobListing->company->company_name,
+        'sameAs' => $jobListing->company->website,
+        'logo' => $jobListing->company->logoUrl(),
+    ],
+    'jobLocation' => [
+        '@type' => 'Place',
+        'address' => [
+            '@type' => 'PostalAddress',
+            'addressLocality' => $jobListing->city,
+            'addressCountry' => $jobListing->country,
+        ],
+    ],
+    'jobLocationType' => $jobListing->work_mode === 'remote' ? 'TELECOMMUTE' : null,
+    'baseSalary' => $jobListing->salary_min ? [
+        '@type' => 'MonetaryAmount',
+        'currency' => $jobListing->currency?->code ?? 'USD',
+        'value' => [
+            '@type' => 'QuantitativeValue',
+            'minValue' => (float) $jobListing->salary_min,
+            'maxValue' => (float) $jobListing->salary_max,
+            'unitText' => strtoupper(substr($jobListing->salary_period, 0, 1)),
+        ],
+    ] : null,
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endsection
 
 @section('content')
 <div class="grid grid-cols-3 gap-8">

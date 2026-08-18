@@ -12,10 +12,14 @@
             <div class="p-4 border-b border-gray-800 font-bold">{{ config('app.name') }} Admin</div>
             <nav class="flex-1 p-4 space-y-1 text-sm">
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Dashboard') }}</a>
+                <a href="{{ route('admin.companies.index') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Companies') }}</a>
+                <a href="{{ route('admin.jobs.index') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Job Moderation') }}</a>
+                <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Job Seekers') }}</a>
                 <a href="{{ route('admin.invoices.index') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Invoices') }}</a>
-                <span class="block px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed text-xs">{{ __('Companies (Phase 6)') }}</span>
-                <span class="block px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed text-xs">{{ __('Users (Phase 6)') }}</span>
-                <span class="block px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed text-xs">{{ __('Languages / Currencies (Phase 6)') }}</span>
+                <div class="pt-3 mt-3 border-t border-gray-800 text-xs text-gray-500 uppercase px-3">{{ __('Settings') }}</div>
+                <a href="{{ route('admin.settings.languages') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Languages') }}</a>
+                <a href="{{ route('admin.settings.currencies') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Currencies') }}</a>
+                <a href="{{ route('admin.settings.translations') }}" class="block px-3 py-2 rounded-lg hover:bg-gray-800">{{ __('Translations') }}</a>
             </nav>
             <div class="p-4 border-t border-gray-800 text-sm">
                 <div class="font-medium">{{ auth('admin')->user()->name }}</div>

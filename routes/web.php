@@ -7,8 +7,13 @@ use App\Http\Controllers\Seeker\ApplicationController;
 use App\Http\Controllers\Seeker\AuthController;
 use App\Http\Controllers\Seeker\DashboardController;
 use App\Http\Controllers\Seeker\SavedJobController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+// Not locale-prefixed — a sitemap lists locale-specific URLs internally (see SitemapController)
+// but the sitemap.xml URL itself should stay stable for search engines to crawl.
+Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------

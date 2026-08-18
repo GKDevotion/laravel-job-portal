@@ -4,6 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name'))</title>
+    <meta name="description" content="@yield('meta_description', __('Find your next job. Browse thousands of listings from companies around the world.'))">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    {{-- Open Graph / social previews --}}
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:title" content="@yield('title', config('app.name'))">
+    <meta property="og:description" content="@yield('meta_description', __('Find your next job.'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+
+    {{-- Structured data (JSON-LD) — helps both traditional search (SEO) and AI answer
+         engines (AEO/GEO) understand page content precisely rather than guessing from
+         rendered HTML. Page-specific schema (JobPosting, Organization, etc.) is yielded
+         per-view below; this default covers the site itself. --}}
+    @hasSection('structured_data')
+        @yield('structured_data')
+    @else
+        <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => config('app.name'),
+            'url' => url('/'),
+        ]) !!}
+        </script>
+    @endif
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
