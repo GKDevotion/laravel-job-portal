@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ in_array(app()->getLocale(), ['ar', 'he', 'fa', 'ur']) ? 'rtl' : 'ltr' }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ current_language()?->is_rtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,12 @@
 
     <div class="flex min-h-screen">
         <aside class="w-64 bg-white border-r flex flex-col">
-            <div class="p-4 border-b font-bold text-indigo-600">{{ config('app.name') }}</div>
+            <div class="p-4 border-b font-bold text-indigo-600 flex items-center justify-between">
+                <span>{{ config('app.name') }}</span>
+            </div>
+            <div class="px-4 py-3 border-b">
+                @include('partials.language-currency-switcher')
+            </div>
             <nav class="flex-1 p-4 space-y-1 text-sm">
                 <a href="{{ route($prefix.'.dashboard') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Dashboard') }}</a>
                 <a href="{{ route($prefix.'.jobs.index') }}" class="block px-3 py-2 rounded-lg hover:bg-indigo-50">{{ __('Job Listings') }}</a>

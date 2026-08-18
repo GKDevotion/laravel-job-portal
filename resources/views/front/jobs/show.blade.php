@@ -47,9 +47,7 @@
         <div class="bg-white border rounded-xl p-5 sticky top-4">
             @if ($jobListing->salary_min || $jobListing->salary_max)
                 <p class="font-semibold text-lg">
-                    {{ $jobListing->currency?->format($jobListing->salary_min) ?? number_format($jobListing->salary_min) }}
-                    &ndash;
-                    {{ $jobListing->currency?->format($jobListing->salary_max) ?? number_format($jobListing->salary_max) }}
+                    {{ money($jobListing->salary_min) }} &ndash; {{ money($jobListing->salary_max) }}
                     <span class="text-sm font-normal text-gray-500">/ {{ $jobListing->salary_period }}</span>
                 </p>
             @endif

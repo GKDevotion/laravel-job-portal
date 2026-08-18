@@ -4,17 +4,17 @@
     "description": "Multilingual, multi-currency Laravel Job Portal with multi-auth (Admin, Company, Job Seeker, Employee)",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9",
-        "laravel/sanctum": "^4.0",
-        "spatie/laravel-permission": "^6.9",
-        "spatie/laravel-medialibrary": "^11.9",
-        "spatie/laravel-translatable": "^6.9",
-        "spatie/laravel-sitemap": "^7.3",
-        "mcamara/laravel-localization": "^2.1",
-        "league/flysystem-aws-s3-v3": "^3.0",
         "barryvdh/laravel-dompdf": "^3.0",
-        "intervention/image": "^3.7"
+        "intervention/image": "^3.7",
+        "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "mcamara/laravel-localization": "^2.4",
+        "spatie/laravel-medialibrary": "^11.9",
+        "spatie/laravel-permission": "^6.9",
+        "spatie/laravel-sitemap": "^7.3",
+        "spatie/laravel-translatable": "^6.9"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -23,6 +23,9 @@
         "phpunit/phpunit": "^11.0"
     },
     "autoload": {
+        "files": [
+            "app/Support/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",

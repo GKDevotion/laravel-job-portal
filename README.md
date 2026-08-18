@@ -167,3 +167,89 @@ Multi-language and multi-currency in practice — locale switching middleware, `
 route groups, translating the admin-managed content (categories, job types), and a currency
 switcher that actually changes displayed prices site-wide.
 
+---
+
+# Phase 3: Multi-Language + Multi-Currency (Working)
+
+## What's new
+
+**Multi-language**
+- Every URL is now locale-prefixed: `/en/jobs`, `/ar/jobs`, `/fr/jobs`, `/hi/jobs` (see the
+  `Route::group(['prefix' => LaravelLocalization::setLocale(), ...])` wrapper in `routes/web.php`
+  — everything, including `admin.php`/`company.php`/`employee.php`, lives inside it).
+- The **`languages` DB table is the real source of truth**, not a static config array.
+  `AppServiceProvider::loadLocalesFromDatabase()` rewrites `laravellocalization.supportedLocales`
+  from the DB on every boot, so adding a language in the (Phase 6) admin panel needs zero code
+  changes or deploys. `config/laravellocalization.php` still ships a static fallback matching the
+  Phase 1 seed data, so the app boots correctly even before that table is queried.
+- RTL is **data-driven**: `current_language()->is_rtl` (from the `languages` table) sets
+  `dir="rtl"` on `<html>` in both layouts — Arabic flips automatically, no hardcoded locale list.
+- A language switcher (`resources/views/partials/language-currency-switcher.blade.php`) is in
+  both the public nav and the employer/employee dashboard sidebar. It swaps the locale prefix
+  on the *current* page via `LaravelLocalization::getLocalizedURL()`, so switching language from
+  a job detail page keeps you on that same job.
+- Sample translations shipped for Arabic, French, and Hindi (`lang/ar.json`, `lang/fr.json`,
+  `lang/hi.json`) covering the nav, homepage, and job-detail strings — enough to see the whole
+  flow working end to end. The full front theme + admin panel translation tool is Phase 6.
+- Job categories, job types, and job listings were already built as translatable JSON columns
+  in Phase 1/2 (`spatie/laravel-translatable`) — `$category->name` now genuinely returns the
+  right language automatically based on the active locale, no extra work needed here.
+
+**Multi-currency**
+- `App\Http\Middleware\SetActiveCurrency` reads `?currency=USD` (or whichever code) from the
+  query string and persists it in session — the currency switcher dropdown is just a `<select>`
+  that submits itself via `onchange`.
+- `active_currency()` / `money($amount)` are global helpers (autoloaded via `composer.json`'s
+  `autoload.files`). **All monetary values in the DB are stored in the base currency** (the
+  `currencies` row with `is_default = true`, `exchange_rate = 1`); `money()` is the single place
+  conversion happens, using `Currency::format()` from Phase 1. Job listing prices on the browse
+  and detail pages now call `money($job->salary_min)` instead of hardcoding the poster's currency
+  — so switching currency in the nav actually changes every price on the page, site-wide.
+- `App\Services\LocalizationSettingsService` — `setDefaultCurrency()` enforces that exactly one
+  currency has `is_default = true` (and forces its rate to exactly 1, since everything else is
+  relative to it). The Phase 6 admin panel's currency management screen will call this instead of
+  updating the model directly, so that invariant can never be broken from the UI.
+
+## New/changed files
+- `config/laravellocalization.php` — supported locales (static fallback), URL behavior
+- `app/Providers/AppServiceProvider.php` — DB-driven locale config + active-currency binding
+- `app/Http/Middleware/SetActiveCurrency.php`
+- `app/Support/helpers.php` — `money()`, `active_currency()`, `current_language()`
+- `app/Services/LocalizationSettingsService.php`
+- `resources/views/partials/language-currency-switcher.blade.php`
+- `lang/ar.json`, `lang/fr.json`, `lang/hi.json`
+- `routes/web.php` — now wraps everything in the locale route group
+- `bootstrap/app.php` — registers the localization middleware aliases + global currency middleware
+
+## Extra setup step for this phase
+
+```bash
+composer require mcamara/laravel-localization
+php artisan vendor:publish --provider="Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider"
+```
+
+## Try it locally
+1. Visit `/en/jobs`, then use the language dropdown top-right to switch to `/ar/jobs` — the
+   whole page should flip to RTL and the nav/homepage strings translate.
+2. Switch the currency dropdown next to it — job salary ranges on `/en/jobs` and any job detail
+   page recalculate immediately using the `exchange_rate` seeded in Phase 1 (USD, EUR, INR, GBP).
+3. `php artisan tinker` → `App\Models\Language::create([...])` with a new code/locale/is_rtl,
+   flip `status = true` — refresh any page and it appears in the switcher immediately, no cache
+   clear needed (the DB read happens on every boot until Phase 6 adds the admin-managed cache
+   layer via `LocalizationSettingsService`).
+
+## One caveat worth knowing
+
+`mcamara/laravel-localization`'s locale-prefix-as-route-group pattern doesn't play well with
+`php artisan route:cache` — the prefix gets baked in from whatever locale was active *when the
+cache was built*. Don't route-cache this app in production; the package's own `route:trans:cache`
+alternative (or simply skipping route caching) is the standard workaround, and it's a fine
+tradeoff at job-portal traffic scale.
+
+## Next: Phase 4
+
+The media system — local storage today (avatars, resumes, logos already use `Storage::disk('public')`
+via `spatie/laravel-medialibrary`), extended to support Amazon S3 and DigitalOcean Spaces as
+drop-in alternatives via the `AWS_*` / `AWS_ENDPOINT` env vars already stubbed in `.env.example`.
+
+

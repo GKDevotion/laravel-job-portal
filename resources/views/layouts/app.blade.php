@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ in_array(app()->getLocale(), ['ar', 'he', 'fa', 'ur']) ? 'rtl' : 'ltr' }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ current_language()?->is_rtl ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +26,8 @@
                 @endauth
 
                 <a href="{{ route('company.dashboard') }}" class="text-gray-500 hover:text-indigo-600">{{ __('For Employers') }}</a>
+
+                @include('partials.language-currency-switcher')
             </div>
         </div>
     </nav>
