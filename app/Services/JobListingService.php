@@ -41,7 +41,18 @@ class JobListingService
 
     public function submitForReview(JobListing $jobListing): JobListing
     {
+        $company = $jobListing->company;
+
+        // Credits are only enforced once a company has a tracked balance (see
+        // Company::hasUnlimitedCredits) — companies that never bought a pack aren't blocked.
+        if (! $company->hasCreditsAvailable()) {
+            throw new \App\Exceptions\InsufficientCreditsException(
+                'You have no job posting credits remaining. Purchase more to submit this job for review.'
+            );
+        }
+
         $jobListing->update(['status' => 'pending_review']);
+        $company->consumeCredit();
 
         return $jobListing;
     }

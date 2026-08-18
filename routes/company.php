@@ -50,7 +50,12 @@ Route::prefix('employer')->name('company.')->group(function () {
         Route::post('profile/logo', [\App\Http\Controllers\Company\ProfileController::class, 'updateLogo'])->name('profile.logo');
         Route::post('profile/cover', [\App\Http\Controllers\Company\ProfileController::class, 'updateCoverImage'])->name('profile.cover');
 
-        // Route::get('invoices', [Company\InvoiceController::class, 'index'])->name('invoices.index'); // Phase 5
+        Route::get('pricing', [\App\Http\Controllers\Company\PricingController::class, 'index'])->name('pricing.index');
+        Route::post('pricing/{plan}/purchase', [\App\Http\Controllers\Company\PricingController::class, 'purchase'])->name('pricing.purchase');
+
+        Route::get('invoices', [\App\Http\Controllers\Company\InvoiceController::class, 'index'])->name('invoices.index');
+        Route::get('invoices/{invoice}', [\App\Http\Controllers\Company\InvoiceController::class, 'show'])->name('invoices.show');
+        Route::get('invoices/{invoice}/download', [\App\Http\Controllers\Company\InvoiceController::class, 'download'])->name('invoices.download');
 
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });

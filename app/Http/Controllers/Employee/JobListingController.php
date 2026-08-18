@@ -74,7 +74,11 @@ class JobListingController extends Controller
     {
         Gate::forUser(Auth::guard('employee')->user())->authorize('update', $job);
 
-        $this->jobListingService->submitForReview($job);
+        try {
+            $this->jobListingService->submitForReview($job);
+        } catch (\App\Exceptions\InsufficientCreditsException $e) {
+            return redirect()->route('employee.jobs.index')->with('error', $e->getMessage().' Ask your company owner to purchase more credits.');
+        }
 
         return back()->with('status', 'Submitted for admin review.');
     }

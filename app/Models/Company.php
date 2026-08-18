@@ -89,6 +89,33 @@ class Company extends Authenticatable implements HasMedia
         return $this->hasMany(Invoice::class);
     }
 
+    // --- Job posting credits ---
+    // null = untracked/unlimited (default for companies that predate the credits system
+    // or haven't purchased a pack yet). Once set to a number, it's enforced.
+
+    public function hasUnlimitedCredits(): bool
+    {
+        return is_null($this->job_posting_credits);
+    }
+
+    public function hasCreditsAvailable(): bool
+    {
+        return $this->hasUnlimitedCredits() || $this->job_posting_credits > 0;
+    }
+
+    public function consumeCredit(): void
+    {
+        if (! $this->hasUnlimitedCredits()) {
+            $this->decrement('job_posting_credits');
+        }
+    }
+
+    public function addCredits(int $amount): void
+    {
+        // First purchase moves a company from "unlimited/untracked" to a real tracked balance.
+        $this->update(['job_posting_credits' => ($this->job_posting_credits ?? 0) + $amount]);
+    }
+
     // Only approved + active companies may post jobs / log in productively
     public function isApproved(): bool
     {
