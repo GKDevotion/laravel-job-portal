@@ -6,6 +6,17 @@
     <title>@yield('title', config('app.name'))</title>
     <meta name="description" content="@yield('meta_description', __('Find your next job. Browse thousands of listings from companies around the world.'))">
     <link rel="canonical" href="{{ url()->current() }}">
+    @hasSection('noindex')
+        <meta name="robots" content="noindex, nofollow">
+    @endif
+
+    {{-- hreflang alternates: tells search engines and AI crawlers this same content exists in
+         other languages, so they index/cite the right locale for each searcher rather than
+         treating each language as duplicate content. --}}
+    @foreach (\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $code => $properties)
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($code, null, [], true) }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getDefaultLocale(), null, [], true) }}">
 
     {{-- Open Graph / social previews --}}
     <meta property="og:site_name" content="{{ config('app.name') }}">
@@ -27,6 +38,14 @@
             '@type' => 'WebSite',
             'name' => config('app.name'),
             'url' => url('/'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => [
+                    '@type' => 'EntryPoint',
+                    'urlTemplate' => url('/'.app()->getLocale().'/jobs').'?q={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
         ]) !!}
         </script>
     @endif

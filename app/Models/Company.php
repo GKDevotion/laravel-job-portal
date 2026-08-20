@@ -121,4 +121,13 @@ class Company extends Authenticatable implements HasMedia
     {
         return $this->approval_status === 'approved' && $this->status;
     }
+
+    /**
+     * See JobListing::getRouteKeyName() for why this is required — without it, route()
+     * would generate ID-based URLs that don't match the {company:slug} route pattern.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

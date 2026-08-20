@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'jobsCount' => JobListing::count(),
             'pendingJobsCount' => JobListing::where('status', 'pending_review')->count(),
             'unpaidInvoicesCount' => Invoice::where('status', 'unpaid')->count(),
-            'revenueThisMonth' => Invoice::where('status', 'paid')->whereMonth('paid_at', now()->month)->sum('amount'),
+            'revenueThisMonth' => Invoice::where('status', 'paid')->whereYear('paid_at', now()->year)->whereMonth('paid_at', now()->month)->sum('amount'),
         ]);
     }
 }

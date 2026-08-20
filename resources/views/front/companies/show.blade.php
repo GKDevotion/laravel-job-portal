@@ -1,5 +1,27 @@
 @extends('layouts.app')
+
 @section('title', $company->company_name)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($company->about ?? $company->company_name.' is hiring on '.config('app.name')), 160))
+
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode(array_filter([
+    '@context' => 'https://schema.org',
+    '@type' => 'Organization',
+    'name' => $company->company_name,
+    'url' => $company->website,
+    'logo' => $company->logoUrl(),
+    'description' => $company->about,
+    'address' => $company->city ? [
+        '@type' => 'PostalAddress',
+        'addressLocality' => $company->city,
+        'addressCountry' => $company->country,
+    ] : null,
+    'sameAs' => array_values(array_filter([$company->linkedin, $company->twitter, $company->instagram, $company->facebook])),
+])) !!}
+</script>
+@endsection
+
 @section('content')
 <div class="bg-white border rounded-xl p-6 mb-8">
     <h1 class="text-2xl font-bold">{{ $company->company_name }}</h1>

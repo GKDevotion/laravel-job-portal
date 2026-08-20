@@ -15,10 +15,16 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // but the sitemap.xml URL itself should stay stable for search engines to crawl.
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// Admin panel is intentionally OUTSIDE the locale-prefixed group below: it's an internal
+// management tool, not public/SEO-facing content, so URLs stay plain "/admin/..." rather than
+// "/en/admin/...". This matches config/laravellocalization.php's urlsIgnored setting — keep
+// both in sync if that ever changes. The admin panel still respects the app locale for its own
+// UI (session/browser-driven), it just doesn't need it baked into the URL.
+require __DIR__.'/admin.php';
+
 /*
 |--------------------------------------------------------------------------
-| All routes are wrapped in the locale group below, so every URL in the
-| app is locale-prefixed: /en/jobs, /ar/jobs, /fr/jobs, /hi/jobs, etc.
+| Everything below IS locale-prefixed: /en/jobs, /ar/jobs, /fr/jobs, /hi/jobs.
 | hideDefaultLocaleInURL is false (see config/laravellocalization.php) so
 | even English always shows /en/... explicitly — no ambiguous bare "/".
 |--------------------------------------------------------------------------
@@ -64,7 +70,6 @@ Route::group(
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         });
 
-        require __DIR__.'/admin.php';
         require __DIR__.'/company.php';
         require __DIR__.'/employee.php';
     }

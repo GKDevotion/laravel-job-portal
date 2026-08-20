@@ -1,6 +1,22 @@
 @extends('layouts.app')
 
 @section('title', __('Find Jobs'))
+@section('meta_description', __('Browse :count open jobs from companies around the world.', ['count' => $jobs->total()]))
+
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'ItemList',
+    'itemListElement' => $jobs->getCollection()->values()->map(fn ($job, $i) => [
+        '@type' => 'ListItem',
+        'position' => $i + 1,
+        'url' => route('jobs.show', $job),
+        'name' => $job->title,
+    ])->all(),
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endsection
 
 @section('content')
 <div class="flex gap-8">

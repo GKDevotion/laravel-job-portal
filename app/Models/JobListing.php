@@ -113,4 +113,17 @@ class JobListing extends Model
     {
         $this->increment('views_count');
     }
+
+    /**
+     * Makes route('jobs.show', $job) generate /jobs/{slug} instead of /jobs/{id}. The
+     * {jobListing:slug} suffix used in routes/web.php only governs INBOUND resolution (which
+     * column an incoming URL is matched against) — outbound URL generation via the model
+     * separately calls getRouteKey(), which defaults to the primary key unless overridden here.
+     * Without this, route() calls would silently generate ID-based URLs that don't match the
+     * slug-based route pattern.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

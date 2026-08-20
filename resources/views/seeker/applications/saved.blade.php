@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('noindex', true)
 @section('title', __('Saved Jobs'))
 @section('content')
 <h1 class="text-xl font-bold mb-6">{{ __('Saved Jobs') }}</h1>

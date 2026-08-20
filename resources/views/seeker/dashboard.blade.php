@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('noindex', true)
 @section('title', __('Dashboard'))
 @section('content')
 <h1 class="text-xl font-bold mb-6">{{ __('Welcome back, :name', ['name' => $user->name]) }}</h1>

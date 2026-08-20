@@ -19,7 +19,7 @@ class JobListingController extends Controller
         if ($keyword = $request->string('q')->trim()->toString()) {
             $locale = app()->getLocale();
             $query->where(function ($q) use ($keyword, $locale) {
-                $q->whereRaw("JSON_EXTRACT(title, '$.\"{$locale}\"') LIKE ?", ["%{$keyword}%"])
+                $q->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(title, '$.\"{$locale}\"')) LIKE ?", ["%{$keyword}%"])
                   ->orWhereHas('company', fn ($c) => $c->where('company_name', 'like', "%{$keyword}%"));
             });
         }
@@ -49,6 +49,11 @@ class JobListingController extends Controller
             $query->where('salary_max', '>=', $request->integer('salary_min'));
         }
 
+        // Featured jobs first, always — this must be the FIRST orderBy call. Eloquent stacks
+        // multiple orderBy() calls in the order they're chained, so adding this after the
+        // sort-mode match() below would make it a tie-breaker instead of the primary sort.
+        $query->orderByDesc('is_featured');
+
         // --- Sort ---
         match ($request->string('sort')->toString()) {
             'salary_high' => $query->orderByDesc('salary_max'),
@@ -56,8 +61,7 @@ class JobListingController extends Controller
             default => $query->latest('published_at'),
         };
 
-        // Featured jobs first, always
-        $jobs = $query->orderByDesc('is_featured')->paginate(15)->withQueryString();
+        $jobs = $query->paginate(15)->withQueryString();
 
         return view('front.jobs.index', [
             'jobs' => $jobs,

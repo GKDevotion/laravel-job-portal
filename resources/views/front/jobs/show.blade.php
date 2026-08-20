@@ -10,16 +10,22 @@
     '@type' => 'JobPosting',
     'title' => $jobListing->title,
     'description' => $jobListing->description,
+    'identifier' => [
+        '@type' => 'PropertyValue',
+        'name' => config('app.name'),
+        'value' => (string) $jobListing->id,
+    ],
     'datePosted' => optional($jobListing->published_at)->toIso8601String(),
     'validThrough' => optional($jobListing->application_deadline)->toIso8601String(),
-    'employmentType' => strtoupper(str_replace(' ', '_', $jobListing->type->name)),
+    'employmentType' => $jobListing->type->schemaEmploymentType(),
     'hiringOrganization' => [
         '@type' => 'Organization',
         'name' => $jobListing->company->company_name,
         'sameAs' => $jobListing->company->website,
         'logo' => $jobListing->company->logoUrl(),
     ],
-    'jobLocation' => [
+    'jobLocationType' => $jobListing->work_mode === 'remote' ? 'TELECOMMUTE' : null,
+    'jobLocation' => $jobListing->work_mode === 'remote' ? null : [
         '@type' => 'Place',
         'address' => [
             '@type' => 'PostalAddress',
@@ -27,7 +33,6 @@
             'addressCountry' => $jobListing->country,
         ],
     ],
-    'jobLocationType' => $jobListing->work_mode === 'remote' ? 'TELECOMMUTE' : null,
     'baseSalary' => $jobListing->salary_min ? [
         '@type' => 'MonetaryAmount',
         'currency' => $jobListing->currency?->code ?? 'USD',
@@ -35,9 +40,23 @@
             '@type' => 'QuantitativeValue',
             'minValue' => (float) $jobListing->salary_min,
             'maxValue' => (float) $jobListing->salary_max,
-            'unitText' => strtoupper(substr($jobListing->salary_period, 0, 1)),
+            'unitText' => match ($jobListing->salary_period) {
+                'hourly' => 'HOUR', 'daily' => 'DAY', 'weekly' => 'WEEK',
+                'monthly' => 'MONTH', 'yearly' => 'YEAR', default => 'YEAR',
+            },
         ],
     ] : null,
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => __('Find Jobs'), 'item' => route('jobs.index')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $jobListing->category->name, 'item' => route('jobs.index', ['category' => $jobListing->job_category_id])],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $jobListing->title, 'item' => url()->current()],
+    ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
 </script>
 @endsection

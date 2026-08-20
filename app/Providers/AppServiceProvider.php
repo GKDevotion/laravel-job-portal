@@ -18,6 +18,31 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->loadLocalesFromDatabase();
         $this->bindActiveCurrency();
+        $this->configurePasswordResetUrls();
+    }
+
+    /**
+     * Laravel's default ResetPassword notification builds its link via
+     * route('password.reset', [...]), which doesn't exist in this app — every guard here
+     * (admin/company/web/employee) uses its own custom-named routes instead. Without this,
+     * calling Password::broker('employees')->sendResetLink() (used by the "invite employee"
+     * flow) throws a RouteNotFoundException the moment the notification tries to render.
+     */
+    protected function configurePasswordResetUrls(): void
+    {
+        \Illuminate\Auth\Notifications\ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+            $email = urlencode($notifiable->getEmailForPasswordReset());
+
+            return match (get_class($notifiable)) {
+                \App\Models\Employee::class => route('employee.set-password.show', ['token' => $token, 'email' => $email]),
+                // Company and job-seeker "forgot password" UI isn't built yet (see README) —
+                // this still prevents a hard crash if sendResetLink() is ever called for them,
+                // pointing at their login page with the token/email as a starting point.
+                \App\Models\Company::class => route('company.login', ['token' => $token, 'email' => $email]),
+                \App\Models\User::class => route('login', ['token' => $token, 'email' => $email]),
+                default => route('admin.login', ['token' => $token, 'email' => $email]),
+            };
+        });
     }
 
     /**
