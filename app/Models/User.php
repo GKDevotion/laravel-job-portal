@@ -39,8 +39,11 @@ class User extends Authenticatable implements HasMedia
     {
         // Fall back to a generated initial-avatar if the seeker never uploaded a photo,
         // so templates never need a null check to render something reasonable.
-        return $this->getFirstMediaUrl('avatar', 'thumb')
-            ?: 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=6366f1&color=fff';
+        $url = $this->getFirstMediaUrl('avatar', 'thumb');
+
+        return $url
+            ? \App\Support\Media::absoluteUrl($url)
+            : 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=6366f1&color=fff';
     }
 
     protected $fillable = [

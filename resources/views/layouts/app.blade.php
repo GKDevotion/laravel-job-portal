@@ -63,7 +63,10 @@
 
                 @auth('web')
                     <a href="{{ route('dashboard') }}" class="hover:text-indigo-600">{{ __('Dashboard') }}</a>
-                    <a href="{{ route('profile.edit') }}" class="hover:text-indigo-600">{{ __('My Profile') }}</a>
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 hover:text-indigo-600">
+                        <img src="{{ auth('web')->user()->avatarUrl() }}" class="w-7 h-7 rounded-full object-cover" alt="{{ auth('web')->user()->name }}">
+                        {{ __('My Profile') }}
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">@csrf
                         <button class="hover:text-indigo-600">{{ __('Logout') }}</button>
                     </form>

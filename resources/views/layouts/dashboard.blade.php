@@ -17,7 +17,11 @@
 
     <div class="flex min-h-screen">
         <aside class="w-64 bg-white border-r flex flex-col">
-            <div class="p-4 border-b font-bold text-indigo-600 flex items-center justify-between">
+            <div class="p-4 border-b font-bold text-indigo-600 flex items-center gap-3">
+                @php $sidebarCompany = $guard === 'company' ? $actor : $actor->company; @endphp
+                @if ($logoUrl = $sidebarCompany->logoUrl())
+                    <img src="{{ $logoUrl }}" class="w-8 h-8 rounded-lg object-cover" alt="{{ $sidebarCompany->company_name }}">
+                @endif
                 <span>{{ config('app.name') }}</span>
             </div>
             <div class="px-4 py-3 border-b">

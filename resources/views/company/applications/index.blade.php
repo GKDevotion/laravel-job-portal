@@ -32,7 +32,12 @@
         <tbody class="divide-y">
             @forelse ($applications as $application)
                 <tr>
-                    <td class="px-4 py-3 font-medium">{{ $application->user->name }}</td>
+                    <td class="px-4 py-3 font-medium">
+                        <div class="flex items-center gap-2">
+                            <img src="{{ $application->user->avatarUrl() }}" class="w-7 h-7 rounded-full object-cover" alt="{{ $application->user->name }}">
+                            {{ $application->user->name }}
+                        </div>
+                    </td>
                     <td class="px-4 py-3">{{ $application->jobListing->title }}</td>
                     <td class="px-4 py-3">
                         <span class="text-xs px-2 py-1 rounded-full

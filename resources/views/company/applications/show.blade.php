@@ -6,8 +6,13 @@
 <div class="grid grid-cols-3 gap-6 mt-4">
     <div class="col-span-2 space-y-6">
         <div class="bg-white border rounded-xl p-6">
-            <h1 class="text-xl font-bold">{{ $application->user->name }}</h1>
-            <p class="text-gray-500 text-sm">{{ $application->user->email }} @if($application->user->phone) &middot; {{ $application->user->phone }} @endif</p>
+            <div class="flex items-center gap-4">
+                <img src="{{ $application->user->avatarUrl() }}" class="w-14 h-14 rounded-full object-cover" alt="{{ $application->user->name }}">
+                <div>
+                    <h1 class="text-xl font-bold">{{ $application->user->name }}</h1>
+                    <p class="text-gray-500 text-sm">{{ $application->user->email }} @if($application->user->phone) &middot; {{ $application->user->phone }} @endif</p>
+                </div>
+            </div>
             <p class="text-sm mt-2">{{ __('Applied for') }}: <strong>{{ $application->jobListing->title }}</strong></p>
 
             @if ($application->cover_letter)

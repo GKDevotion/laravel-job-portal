@@ -64,11 +64,20 @@
 @section('content')
 <div class="grid grid-cols-3 gap-8">
     <div class="col-span-2">
-        <h1 class="text-2xl font-bold">{{ $jobListing->title }}</h1>
-        <p class="text-gray-500 mt-1">
-            <a href="{{ route('companies.show', $jobListing->company) }}" class="hover:text-indigo-600">{{ $jobListing->company->company_name }}</a>
-            &middot; {{ $jobListing->city ? $jobListing->city.', '.$jobListing->country : ucfirst($jobListing->work_mode) }}
-        </p>
+        <div class="flex items-center gap-4">
+            @if ($logoUrl = $jobListing->company->logoUrl())
+                <img src="{{ $logoUrl }}" class="w-16 h-16 rounded-lg object-cover shrink-0" alt="{{ $jobListing->company->company_name }}">
+            @else
+                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-xl shrink-0">{{ substr($jobListing->company->company_name, 0, 1) }}</div>
+            @endif
+            <div>
+                <h1 class="text-2xl font-bold">{{ $jobListing->title }}</h1>
+                <p class="text-gray-500 mt-1">
+                    <a href="{{ route('companies.show', $jobListing->company) }}" class="hover:text-indigo-600">{{ $jobListing->company->company_name }}</a>
+                    &middot; {{ $jobListing->city ? $jobListing->city.', '.$jobListing->country : ucfirst($jobListing->work_mode) }}
+                </p>
+            </div>
+        </div>
 
         <div class="flex gap-2 mt-4">
             <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">{{ $jobListing->type->name }}</span>

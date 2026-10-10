@@ -3,8 +3,13 @@
 <a href="{{ route('employee.applications.index') }}" class="text-sm text-indigo-600">&larr; {{ __('Back to Applicants') }}</a>
 <div class="grid grid-cols-3 gap-6 mt-4">
     <div class="col-span-2 bg-white border rounded-xl p-6">
-        <h1 class="text-xl font-bold">{{ $application->user->name }}</h1>
-        <p class="text-gray-500 text-sm">{{ $application->user->email }}</p>
+        <div class="flex items-center gap-4">
+            <img src="{{ $application->user->avatarUrl() }}" class="w-14 h-14 rounded-full object-cover" alt="{{ $application->user->name }}">
+            <div>
+                <h1 class="text-xl font-bold">{{ $application->user->name }}</h1>
+                <p class="text-gray-500 text-sm">{{ $application->user->email }}</p>
+            </div>
+        </div>
         <p class="text-sm mt-2">{{ __('Applied for') }}: <strong>{{ $application->jobListing->title }}</strong></p>
         @if ($application->cover_letter)
             <div class="mt-4 pt-4 border-t">

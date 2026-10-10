@@ -23,12 +23,26 @@
 @endsection
 
 @section('content')
-<div class="bg-white border rounded-xl p-6 mb-8">
-    <h1 class="text-2xl font-bold">{{ $company->company_name }}</h1>
-    <p class="text-gray-500">{{ $company->industry }} @if($company->city) &middot; {{ $company->city }}, {{ $company->country }} @endif</p>
-    @if ($company->about)
-        <p class="mt-4 text-gray-700 whitespace-pre-line">{{ $company->about }}</p>
+<div class="bg-white border rounded-xl overflow-hidden mb-8">
+    @if ($coverUrl = $company->coverImageUrl())
+        <img src="{{ $coverUrl }}" class="w-full h-40 object-cover" alt="{{ $company->company_name }} cover">
     @endif
+    <div class="p-6">
+        <div class="flex items-center gap-4">
+            @if ($logoUrl = $company->logoUrl())
+                <img src="{{ $logoUrl }}" class="w-16 h-16 rounded-lg object-cover shrink-0 {{ $coverUrl ? '-mt-12 border-4 border-white' : '' }}" alt="{{ $company->company_name }}">
+            @else
+                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-xl shrink-0 {{ $coverUrl ? '-mt-12 border-4 border-white' : '' }}">{{ substr($company->company_name, 0, 1) }}</div>
+            @endif
+            <div>
+                <h1 class="text-2xl font-bold">{{ $company->company_name }}</h1>
+                <p class="text-gray-500">{{ $company->industry }} @if($company->city) &middot; {{ $company->city }}, {{ $company->country }} @endif</p>
+            </div>
+        </div>
+        @if ($company->about)
+            <p class="mt-4 text-gray-700 whitespace-pre-line">{{ $company->about }}</p>
+        @endif
+    </div>
 </div>
 <h2 class="text-lg font-semibold mb-4">{{ __('Open Positions') }}</h2>
 <div class="space-y-4">

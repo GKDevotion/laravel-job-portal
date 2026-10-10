@@ -20,8 +20,17 @@
             @forelse ($companies as $company)
                 <tr>
                     <td class="px-4 py-3">
-                        <p class="font-medium">{{ $company->company_name }}</p>
-                        <p class="text-gray-500 text-xs">{{ $company->email }}</p>
+                        <div class="flex items-center gap-2">
+                            @if ($logoUrl = $company->logoUrl())
+                                <img src="{{ $logoUrl }}" class="w-7 h-7 rounded object-cover" alt="{{ $company->company_name }}">
+                            @else
+                                <div class="w-7 h-7 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">{{ substr($company->company_name, 0, 1) }}</div>
+                            @endif
+                            <div>
+                                <p class="font-medium">{{ $company->company_name }}</p>
+                                <p class="text-gray-500 text-xs">{{ $company->email }}</p>
+                            </div>
+                        </div>
                     </td>
                     <td class="px-4 py-3">{{ $company->job_listings_count }}</td>
                     <td class="px-4 py-3">

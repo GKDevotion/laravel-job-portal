@@ -2,7 +2,10 @@
 @section('noindex', true)
 @section('title', __('Dashboard'))
 @section('content')
-<h1 class="text-xl font-bold mb-6">{{ __('Welcome back, :name', ['name' => $user->name]) }}</h1>
+<h1 class="text-xl font-bold mb-6 flex items-center gap-3">
+    <img src="{{ $user->avatarUrl() }}" class="w-10 h-10 rounded-full object-cover" alt="{{ $user->name }}">
+    {{ __('Welcome back, :name', ['name' => $user->name]) }}
+</h1>
 <div class="grid grid-cols-3 gap-4 mb-8">
     <div class="bg-white border rounded-xl p-5"><p class="text-2xl font-bold">{{ $applicationsCount }}</p><p class="text-sm text-gray-500">{{ __('Applications') }}</p></div>
     <div class="bg-white border rounded-xl p-5"><p class="text-2xl font-bold">{{ $savedJobsCount }}</p><p class="text-sm text-gray-500">{{ __('Saved Jobs') }}</p></div>

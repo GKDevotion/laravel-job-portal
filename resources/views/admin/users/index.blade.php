@@ -11,8 +11,13 @@
             @forelse ($users as $user)
                 <tr>
                     <td class="px-4 py-3">
-                        <p class="font-medium">{{ $user->name }}</p>
-                        <p class="text-gray-500 text-xs">{{ $user->email }}</p>
+                        <div class="flex items-center gap-2">
+                            <img src="{{ $user->avatarUrl() }}" class="w-7 h-7 rounded-full object-cover" alt="{{ $user->name }}">
+                            <div>
+                                <p class="font-medium">{{ $user->name }}</p>
+                                <p class="text-gray-500 text-xs">{{ $user->email }}</p>
+                            </div>
+                        </div>
                     </td>
                     <td class="px-4 py-3">{{ $user->applications_count }}</td>
                     <td class="px-4 py-3">

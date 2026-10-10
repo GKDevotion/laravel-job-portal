@@ -91,23 +91,32 @@
         <div class="space-y-4">
             @forelse ($jobs as $job)
                 <a href="{{ route('jobs.show', $job) }}" class="block bg-white border rounded-xl p-5 hover:shadow-md transition">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <h3 class="font-semibold text-lg">
-                                {{ $job->title }}
-                                @if ($job->is_featured)
-                                    <span class="ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{{ __('Featured') }}</span>
-                                @endif
-                            </h3>
-                            <p class="text-sm text-gray-500">{{ $job->company->company_name }} &middot; {{ $job->city ?? $job->work_mode }}</p>
+                    <div class="flex items-start gap-4">
+                        @if ($logoUrl = $job->company->logoUrl())
+                            <img src="{{ $logoUrl }}" class="w-12 h-12 rounded-lg object-cover shrink-0" alt="{{ $job->company->company_name }}">
+                        @else
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 font-semibold shrink-0">{{ substr($job->company->company_name, 0, 1) }}</div>
+                        @endif
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3 class="font-semibold text-lg">
+                                        {{ $job->title }}
+                                        @if ($job->is_featured)
+                                            <span class="ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{{ __('Featured') }}</span>
+                                        @endif
+                                    </h3>
+                                    <p class="text-sm text-gray-500">{{ $job->company->company_name }} &middot; {{ $job->city ?? $job->work_mode }}</p>
+                                </div>
+                                <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">{{ $job->type->name }}</span>
+                            </div>
+                            @if ($job->salary_min || $job->salary_max)
+                                <p class="text-sm text-gray-700 mt-3">
+                                    {{ money($job->salary_min) }} - {{ money($job->salary_max) }} / {{ $job->salary_period }}
+                                </p>
+                            @endif
                         </div>
-                        <span class="text-xs bg-gray-100 px-3 py-1 rounded-full">{{ $job->type->name }}</span>
                     </div>
-                    @if ($job->salary_min || $job->salary_max)
-                        <p class="text-sm text-gray-700 mt-3">
-                            {{ money($job->salary_min) }} - {{ money($job->salary_max) }} / {{ $job->salary_period }}
-                        </p>
-                    @endif
                 </a>
             @empty
                 <p class="text-center text-gray-500 py-12">{{ __('No jobs match your filters yet.') }}</p>

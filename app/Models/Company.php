@@ -39,12 +39,16 @@ class Company extends Authenticatable implements HasMedia
 
     public function logoUrl(): ?string
     {
-        return $this->getFirstMediaUrl('logo', 'thumb') ?: null;
+        $url = $this->getFirstMediaUrl('logo', 'thumb');
+
+        return $url ? \App\Support\Media::absoluteUrl($url) : null;
     }
 
     public function coverImageUrl(): ?string
     {
-        return $this->getFirstMediaUrl('cover_image', 'cover') ?: null;
+        $url = $this->getFirstMediaUrl('cover_image', 'cover');
+
+        return $url ? \App\Support\Media::absoluteUrl($url) : null;
     }
 
     protected $fillable = [
