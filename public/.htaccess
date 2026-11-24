@@ -1,4 +1,4 @@
-# Standard Laravel public-directory rewrite rules.
+# Laravel public-directory rewrite rules.
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes

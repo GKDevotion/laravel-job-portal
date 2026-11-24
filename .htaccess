@@ -1,21 +1,27 @@
+# JobStock root rewrite for Apache/XAMPP subfolder hosting.
+# Project URL example: http://127.0.0.1/laravel/job-portal/
+# Keep Laravel's public/.htaccess in place as well.
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
+    Options -MultiViews -Indexes
     RewriteEngine On
 
-    # Handle Authorization Header
+    # Preserve Authorization header for Laravel.
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    # Serve public assets from the project-root URL without exposing /public.
+    RewriteRule ^assets/(.*)$ public/assets/$1 [L,NC]
+    RewriteRule ^build/(.*)$ public/build/$1 [L,NC]
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L,NC]
+    RewriteRule ^(favicon\.ico|robots\.txt)$ public/$1 [L,NC]
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Keep hidden files and Laravel internals inaccessible over HTTP.
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)(/|$) - [F,L,NC]
+    RewriteRule ^(artisan|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|vite\.config\.js)$ - [F,L,NC]
+
+    # Send application routes to Laravel's public front controller.
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L]
 </IfModule>
