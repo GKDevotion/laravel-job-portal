@@ -51,6 +51,11 @@ class Job extends Model
         return $this->belongsTo(JobCategory::class, 'category_id');
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'job_skill');
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published')

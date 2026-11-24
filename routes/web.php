@@ -36,4 +36,18 @@ Route::middleware('auth')->group(function () {
   Route::middleware('role:employer')->prefix('employer')->name('employer.')->group(function () { Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'editEmployer'])->name('profile.edit'); Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'updateEmployer'])->name('profile.update'); });
  });
 });
+
+// JobStock Batch 05-07: taxonomy, employer job management and moderation.
+Route::middleware(['auth','verified','role:employer'])->prefix('employer')->name('employer.')->group(function () {
+ Route::resource('jobs', \App\Http\Controllers\Employer\JobManagementController::class)->except(['show']);
+});
+Route::middleware(['auth','verified','role:super_admin,admin'])->prefix('admin')->name('admin.')->group(function () {
+ Route::get('/categories', [\App\Http\Controllers\Admin\JobCategoryController::class,'index'])->name('categories.index');
+ Route::post('/categories', [\App\Http\Controllers\Admin\JobCategoryController::class,'store'])->name('categories.store');
+ Route::put('/categories/{category}', [\App\Http\Controllers\Admin\JobCategoryController::class,'update'])->name('categories.update');
+ Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\JobCategoryController::class,'destroy'])->name('categories.destroy');
+ Route::get('/job-reviews', [\App\Http\Controllers\Admin\JobReviewController::class,'index'])->name('jobs.review.index');
+ Route::patch('/job-reviews/{job}', [\App\Http\Controllers\Admin\JobReviewController::class,'update'])->name('jobs.review.update');
+});
+
 Route::fallback(fn () => response()->view('errors.404', [], 404));
