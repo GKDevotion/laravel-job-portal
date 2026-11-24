@@ -1,58 +1,76 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# JobStock Batch 05–07 Automated Test Pack
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is an automated Laravel feature-test pack for the Batch 05–07 code in the
+JobStock project ZIP and overlay package:
 
-## About Laravel
+- Batch 05: categories, skills and locations
+- Batch 06: employer job posting and ownership checks
+- Batch 07: public job search and job detail visibility
+- Admin moderation and role protection
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Files
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- `tests/Feature/JobStockBatch0507Test.php`
+- `run-jobstock-batch-05-07-tests.bat`
+- `docs/JOBSTOCK-BATCH-05-07-AUTOMATED-TESTS.md`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Install
 
-## Learning Laravel
+Copy the `tests` folder into the Laravel project root and merge it with the
+existing `tests` folder. Copy the `.bat` runner into the Laravel project root.
+Copy the documentation file into `docs/`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Do not replace your existing `phpunit.xml`; the supplied project already
+configures PHPUnit to use SQLite `:memory:` for tests.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Run on Windows / XAMPP
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Double-click:
 
-## Agentic Development
+`run-jobstock-batch-05-07-tests.bat`
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Or run from the project root:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test --testsuite=Feature --filter=JobStockBatch0507Test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Run the entire project suite:
 
-## Contributing
+```bash
+php artisan test
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Safety
 
-## Code of Conduct
+The existing `phpunit.xml` sets `DB_CONNECTION=sqlite` and
+`DB_DATABASE=:memory:` for the test environment. The test class uses
+`RefreshDatabase`, so test migrations and records are created in the isolated
+in-memory test database, not in the normal MySQL `.env` database.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Before running, verify that your local `phpunit.xml` still contains those
+testing environment values. Do not run this suite if you have changed the
+testing DB configuration to point at your live database.
 
-## Security Vulnerabilities
+No npm packages, frontend build, `artisan serve`, or schema changes are needed
+to install this test pack. Your Laravel dependencies must already be installed
+(`vendor/autoload.php` must exist).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Covered scenarios
 
-## License
+1. Public job listing loads and hides pending jobs.
+2. Keyword and location filters work together.
+3. Public job details are available for published jobs only.
+4. Employer can open their job manager and submit a job for review.
+5. Employer cannot edit another company's job.
+6. Invalid salary range is rejected.
+7. Admin can approve a pending job and make it public.
+8. Candidate cannot access admin category/review routes.
+9. Admin can create a category; a category in use cannot be deleted.
+10. Inactive categories are not shown in public search filters.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Important limitation
+
+These are application-level feature tests. They do not validate SMTP delivery,
+real browser rendering, Apache rewrite configuration, or actual uploaded-file
+permissions. Those require separate environment/browser checks.

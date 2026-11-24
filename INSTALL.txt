@@ -1,0 +1,18 @@
+JobStock candidate profile Blade parse-error fix
+
+1. Back up your existing:
+   resources/views/profiles/candidate.blade.php
+
+2. Extract this ZIP into your Laravel project root and overwrite the file at:
+   resources/views/profiles/candidate.blade.php
+
+3. From the project root, run:
+   php artisan view:clear
+   php artisan optimize:clear
+
+4. Reload:
+   /candidate/profile
+
+This patch only reformats and balances the Blade directives in the supplied
+candidate profile view. It does not change routes, controllers, database
+migrations, validation rules, or upload handling.
