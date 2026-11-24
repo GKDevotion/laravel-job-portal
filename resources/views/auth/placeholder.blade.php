@@ -1,3 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 @section('title', $heading.' | JobStock')
-@section('content')<section class="container py-5"><div class="content-panel mx-auto text-center" style="max-width:620px"><span class="section-kicker">JobStock account</span><h1 class="h2 fw-bold">{{ $heading }}</h1><p class="text-secondary">This screen is reserved for the authentication workflow in the next development batch.</p><a class="btn btn-primary" href="{{ route('home') }}">Back to home</a></div></section>@endsection
+@section('content')
+<section class="auth-card text-center"><span class="auth-kicker">JobStock account</span><h1>{{ $heading }}</h1><p class="auth-intro">This account screen is being prepared.</p><a class="btn btn-primary auth-submit w-100 d-flex align-items-center justify-content-center" href="{{ route('home') }}">Back to home</a></section>
+@endsection

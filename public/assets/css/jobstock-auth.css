@@ -1,0 +1,78 @@
+/* JobStock compact authentication UI. Designed to fit common laptop viewports. */
+:root{--auth-primary:#245bea;--auth-ink:#14213d;--auth-muted:#718096;--auth-border:#dce4ef}
+html,body{min-height:100%;}
+.jobstock-auth-body{min-height:100vh;min-height:100svh;margin:0;background:radial-gradient(circle at 12% 12%,rgba(37,99,235,.09),transparent 28%),radial-gradient(circle at 88% 85%,rgba(20,184,166,.07),transparent 26%),#f5f7fc;color:var(--auth-ink);font-family:'Poppins',sans-serif;display:flex;flex-direction:column}
+.auth-topbar{height:60px;min-height:60px;background:rgba(255,255,255,.94);border-bottom:1px solid #e8edf5;display:flex;align-items:center}
+.auth-topbar-inner{display:flex;align-items:center;justify-content:space-between}
+.auth-brand{text-decoration:none;display:inline-flex;align-items:center;gap:9px;font-size:21px;font-weight:700;color:#15213a}
+.auth-brand .brand-mark{width:38px;height:38px;border-radius:12px;background:var(--auth-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 15px rgba(37,99,235,.18)}
+.auth-brand .brand-period{color:#14b8a6}
+.auth-back-link{font-size:12px;color:#52617a;text-decoration:none;font-weight:500}
+.auth-back-link:hover{color:var(--auth-primary)}
+.auth-main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 16px}
+.auth-card{width:100%;max-width:480px;max-height:100%;overflow:visible;background:#fff;border:1px solid #e8edf5;border-radius:19px;padding:25px 30px;box-shadow:0 14px 42px rgba(22,42,82,.08)}
+.auth-card--register{max-width:490px;padding:20px 30px}
+.auth-kicker{display:inline-block;color:var(--auth-primary);background:#eff5ff;border-radius:30px;padding:5px 10px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.auth-card h1{font-size:24px;line-height:1.25;font-weight:700;letter-spacing:-.6px;color:var(--auth-ink);margin:10px 0 5px}
+.auth-intro{font-size:12px;line-height:1.5;color:var(--auth-muted);margin:0 0 17px}
+.auth-card .form-label{font-size:11px;font-weight:600;color:#34425a;margin-bottom:5px;line-height:1.35}
+.auth-card .form-control{height:43px;min-height:43px;border:1px solid var(--auth-border);border-radius:9px;padding:8px 12px;font-family:inherit;font-size:12px;background:#fbfcff}
+.auth-card .form-control:focus{border-color:#6d9cff;box-shadow:0 0 0 3px rgba(37,99,235,.09);background:#fff}
+.auth-card .form-check{min-height:18px;display:flex;align-items:center;gap:8px;padding-left:0;margin:0}
+.auth-card .form-check-input{width:15px;height:15px;float:none;margin:0;border-color:#cbd5e1;flex:0 0 auto}
+.auth-card .form-check-label{font-size:11px;color:#5d6b82;line-height:1.35}
+.auth-card a{color:var(--auth-primary);text-decoration:none;font-size:11px;font-weight:500}
+.auth-card a:hover{text-decoration:underline}
+.auth-card form.vstack{gap:10px!important}
+.auth-submit{height:45px;min-height:45px;border:0;border-radius:10px;background:linear-gradient(110deg,#2563eb,#1d4ed8);font-size:12px;font-weight:600;box-shadow:0 7px 17px rgba(37,99,235,.16);padding:8px 14px}
+.auth-submit:hover{background:linear-gradient(110deg,#1d4ed8,#1e40af)}
+.auth-switch{font-size:11px;color:#68778e;text-align:center;margin:13px 0 0;line-height:1.5}
+.auth-switch a{font-weight:600}
+.auth-bottom-note{text-align:center;color:#91a0b5;font-size:10px;padding:0 12px 8px;line-height:1.4}
+.auth-card .alert{font-size:11px;border-radius:9px;padding:8px 11px;margin-bottom:10px}
+.auth-card .alert ul{padding-left:17px}
+.auth-card--register .auth-intro{margin-bottom:12px}
+.auth-card--register form.vstack{gap:8px!important}
+.auth-card--register .auth-switch{margin-top:10px}
+.auth-card--register .form-control{height:41px;min-height:41px}
+.auth-card--register .auth-submit{height:43px;min-height:43px}
+@media(max-height:720px) and (min-width:768px){.auth-main{padding-top:7px;padding-bottom:7px}.auth-card{padding-top:19px;padding-bottom:19px}.auth-card--register{padding-top:14px;padding-bottom:14px}.auth-card h1{font-size:22px;margin-top:7px}.auth-intro{margin-bottom:12px}.auth-card--register .auth-intro{margin-bottom:8px}.auth-card form.vstack{gap:8px!important}.auth-card--register form.vstack{gap:6px!important}.auth-card .form-control{height:40px;min-height:40px}.auth-card--register .form-control{height:38px;min-height:38px}.auth-switch{margin-top:9px}}
+@media(max-width:767.98px){.auth-main{padding:18px 13px;align-items:center}.auth-card,.auth-card--register{max-width:500px;padding:23px 21px}.auth-card h1{font-size:22px}.auth-bottom-note{padding-bottom:10px}}
+@media(max-width:575.98px){.auth-topbar{height:56px;min-height:56px}.auth-brand{font-size:19px}.auth-brand .brand-mark{width:35px;height:35px}.auth-back-link{font-size:10px}.auth-main{padding:14px 11px}.auth-card,.auth-card--register{padding:21px 17px;border-radius:15px}.auth-card h1{font-size:21px}.auth-intro{font-size:11px}.auth-card .form-control{height:42px;min-height:42px}.auth-bottom-note{font-size:9px}}
+/* On short mobile screens allow natural page scrolling rather than clipping fields. */
+@media(max-height:650px) and (max-width:767.98px){.auth-main{align-items:flex-start;padding-top:12px;padding-bottom:12px}.auth-card,.auth-card--register{margin:auto}.auth-bottom-note{padding-top:4px}}
+
+/* Final registration footer balance: keep the employer form compact on laptop screens. */
+.auth-card--employer{padding-top:16px;padding-bottom:16px}
+.auth-card--employer .auth-kicker{padding:4px 9px;font-size:8px}
+.auth-card--employer h1{font-size:22px;line-height:1.2;margin:7px 0 3px}
+.auth-card--employer .auth-intro{font-size:11px;line-height:1.35;margin-bottom:8px}
+.auth-card--employer form.vstack{gap:6px!important}
+.auth-card--employer .form-label{font-size:10px;margin-bottom:3px;line-height:1.2}
+.auth-card--employer .form-control{height:36px;min-height:36px;padding:6px 10px;font-size:11px;border-radius:8px}
+.auth-card--employer .form-check{min-height:16px}
+.auth-card--employer .form-check-input{width:14px;height:14px}
+.auth-card--employer .form-check-label{font-size:10px}
+.auth-card--employer .auth-submit{height:40px;min-height:40px;padding:6px 12px}
+.auth-card--employer .auth-switch{margin-top:7px;font-size:10px}
+.auth-bottom-note{flex:0 0 auto}
+@media(max-height:800px) and (min-width:768px){
+  .auth-main{padding-top:6px;padding-bottom:6px}
+  .auth-card--employer{padding-top:13px;padding-bottom:13px}
+  .auth-card--employer h1{font-size:21px;margin-top:5px}
+  .auth-card--employer .auth-intro{margin-bottom:6px}
+  .auth-card--employer form.vstack{gap:5px!important}
+  .auth-card--employer .form-control{height:34px;min-height:34px}
+  .auth-card--employer .auth-submit{height:38px;min-height:38px}
+  .auth-card--employer .auth-switch{margin-top:5px}
+  .auth-bottom-note{padding-bottom:5px}
+}
+@media(max-width:767.98px){
+  .auth-card--employer{padding:20px 19px}
+  .auth-card--employer .form-control{height:41px;min-height:41px}
+  .auth-card--employer form.vstack{gap:8px!important}
+}
+@media(max-height:650px) and (max-width:767.98px){
+  .auth-card--employer{padding-top:16px;padding-bottom:16px}
+  .auth-card--employer .form-control{height:38px;min-height:38px}
+}
